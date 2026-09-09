@@ -342,7 +342,36 @@ body { padding-top: 78px; }
 }
 .hero--photo .hero__bg { position: absolute; inset: 0; }
 .hero--photo .hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 42%; }
-/* content sits in the LEFT column; the photo subject reads on the centre-right */
+/* content sits in the LEFT column; the photo subject reads on the center-right */
+
+/* ---------- hero slideshow (progressive enhancement) ---------- */
+.hero__slides { position: absolute; inset: 0; }
+.hero__slide { position: absolute; inset: 0; }
+.hero__slide img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 45%; }
+/* with JS: crossfade between slides */
+.hero__slides.is-live .hero__slide { opacity: 0; transition: opacity 1100ms ease; will-change: opacity; }
+.hero__slides.is-live .hero__slide.is-active { opacity: 1; }
+/* without JS: the first slide simply shows, the rest are hidden */
+.hero__slides:not(.is-live) .hero__slide + .hero__slide { opacity: 0; }
+
+.hero__dots {
+  position: absolute; z-index: 3;
+  right: var(--mx); bottom: clamp(18px, 3.4vw, 32px);
+  display: flex; gap: 9px;
+}
+.hero__dots button {
+  width: 28px; height: 4px; padding: 0; border: 0; cursor: pointer;
+  border-radius: 2px; background: rgba(255, 255, 255, 0.34);
+  transition: background 200ms ease;
+}
+.hero__dots button.is-active { background: rgba(255, 255, 255, 0.95); }
+.hero__dots button:hover { background: rgba(255, 255, 255, 0.6); }
+.hero__dots button.is-active:hover { background: rgba(255, 255, 255, 0.95); }
+.hero__dots button:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__slides.is-live .hero__slide { transition: none; }
+}
 .hero--photo .hero__scrim {
   position: absolute; inset: 0;
   background:
@@ -891,7 +920,7 @@ body { padding-top: 78px; }
 .cta-split__media img { width: 100%; height: 100%; object-fit: cover; }
 .cta-split h2 { font-size: var(--headline-lg); margin-bottom: 20px; }
 
-/* ---------- 18b. Checklist (Programmes split rows) ---------- */
+/* ---------- 18b. Checklist (Programs split rows) ---------- */
 .checklist { list-style: none; margin: 20px 0 26px; padding: 0; display: grid; gap: 12px; }
 .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: var(--body-sm); color: var(--on-surface-var); }
 .checklist svg { flex: none; width: 18px; height: 18px; margin-top: 2px; color: var(--accent-deep); }
@@ -1133,7 +1162,8 @@ body:not(.js) .reveal { opacity: 1; transform: none; }
   .footer__grid { grid-template-columns: 1fr; }
   .footer__bottom { flex-direction: column; }
   .team-grid--offset .member:nth-child(even) { margin-top: 0; }
-  .hero__actions .btn { flex: 1; justify-content: center; }
+  .hero__actions { flex-direction: column; align-items: stretch; }
+  .hero__actions .btn { justify-content: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {

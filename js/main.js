@@ -1,8 +1,9 @@
-/* AIRDAB - site behaviour
+/* AIRDAB - site behavior
    - accessible mobile nav (focus trap, Esc, scroll lock, restore focus)
    - active nav link from current URL
    - scroll reveal (respects reduced motion)
    - count-up numbers (Our Impact / Home)
+   - hero slideshow (crossfade, autoplay, dots; respects reduced motion)
    - support-type option selector (Support Us)
    - contact / support forms -> pre-filled mailto
    - dynamic copyright year
@@ -169,6 +170,73 @@
   /* ---------- Year ---------- */
   document.querySelectorAll("[data-year]").forEach(function (el) {
     el.textContent = new Date().getFullYear();
+  });
+
+  /* ---------- Hero slideshow (crossfade, autoplay, dots) ---------- */
+  document.querySelectorAll(".hero__slides").forEach(function (stage) {
+    var slides = Array.prototype.slice.call(stage.querySelectorAll(".hero__slide"));
+    if (slides.length < 2) return;
+
+    var INTERVAL = 6000;
+    var index = 0;
+    var timer = null;
+    var hero = stage.closest(".hero");
+
+    stage.classList.add("is-live");
+    slides.forEach(function (s, i) { s.classList.toggle("is-active", i === 0); });
+
+    // eager-load the neighbours of the current slide so crossfades are ready
+    var warm = function (i) {
+      var img = slides[(i + slides.length) % slides.length].querySelector("img");
+      if (img && img.loading === "lazy") img.loading = "eager";
+    };
+    warm(1);
+
+    var dots = document.createElement("div");
+    dots.className = "hero__dots";
+    dots.setAttribute("role", "tablist");
+    dots.setAttribute("aria-label", "Choose hero image");
+    var buttons = slides.map(function (slide, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("role", "tab");
+      var label = (slide.querySelector("img") || {}).alt || "Image " + (i + 1);
+      b.setAttribute("aria-label", label);
+      b.addEventListener("click", function () { go(i); restart(); });
+      dots.appendChild(b);
+      return b;
+    });
+    (hero || stage.parentNode).appendChild(dots);
+
+    var render = function () {
+      slides.forEach(function (s, i) { s.classList.toggle("is-active", i === index); });
+      buttons.forEach(function (b, i) {
+        b.classList.toggle("is-active", i === index);
+        b.setAttribute("aria-selected", i === index ? "true" : "false");
+      });
+    };
+    var go = function (i) { index = (i + slides.length) % slides.length; warm(index + 1); render(); };
+    var next = function () { go(index + 1); };
+
+    var start = function () {
+      if (timer || reduceMotion || document.hidden) return;
+      timer = window.setInterval(next, INTERVAL);
+    };
+    var stop = function () { if (timer) { window.clearInterval(timer); timer = null; } };
+    var restart = function () { stop(); start(); };
+
+    if (hero) {
+      hero.addEventListener("mouseenter", stop);
+      hero.addEventListener("mouseleave", start);
+      hero.addEventListener("focusin", stop);
+      hero.addEventListener("focusout", start);
+    }
+    document.addEventListener("visibilitychange", function () {
+      document.hidden ? stop() : start();
+    });
+
+    render();
+    start();
   });
 
   /* ---------- Give directly (Support Us donate panel) ---------- */

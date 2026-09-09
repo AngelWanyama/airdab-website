@@ -31,7 +31,7 @@ seven. Keep the nav link list identical across pages.
 |---|---|
 | `index.html` | Hero, who-we-are value grid, stat band, field bento, testimonial, CTA |
 | `about.html` | Story, vision/mission, values grid, commitment, team, legal status |
-| `our-work.html` | 8 programmes as alternating split rows, at-a-glance band, 6 services, CTA |
+| `our-work.html` | 8 programs as alternating split rows, at-a-glance band, 6 services, CTA |
 | `impact.html` | Impact numbers dashboard (animated), what we track, 2035 statement, stories |
 | `who-we-work-with.html` | Stakeholder grid, partner logo wall, voices of impact, partner-with-us |
 | `support-us.html` | Ways to support, interest form with option selector |
@@ -39,7 +39,7 @@ seven. Keep the nav link list identical across pages.
 
 ## Content and assets
 
-All organisational content, programmes, services, partners, testimonials, contact
+All organizational content, programs, services, partners, testimonials, contact
 details and imagery come from AIRDAB's existing project - **not** from the reference
 folder. No ImpactSphere reference copy is used anywhere.
 
