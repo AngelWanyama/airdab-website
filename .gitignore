@@ -1,0 +1,8 @@
+# Raw, unoptimised source photography and video (kept locally only).
+# Web-ready derivatives live in assets/ and are committed.
+assets/AIRDAB PHOTOS/
+
+# OS / editor cruft
+Thumbs.db
+Desktop.ini
+.DS_Store
