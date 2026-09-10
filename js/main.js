@@ -177,7 +177,7 @@
     var slides = Array.prototype.slice.call(stage.querySelectorAll(".hero__slide"));
     if (slides.length < 2) return;
 
-    var INTERVAL = 6000;
+    var INTERVAL = 5000;
     var index = 0;
     var timer = null;
     var hero = stage.closest(".hero");
@@ -185,7 +185,7 @@
     stage.classList.add("is-live");
     slides.forEach(function (s, i) { s.classList.toggle("is-active", i === 0); });
 
-    // eager-load the neighbours of the current slide so crossfades are ready
+    // eager-load the neighbors of the current slide so crossfades are ready
     var warm = function (i) {
       var img = slides[(i + slides.length) % slides.length].querySelector("img");
       if (img && img.loading === "lazy") img.loading = "eager";
@@ -219,15 +219,17 @@
     var next = function () { go(index + 1); };
 
     var start = function () {
-      if (timer || reduceMotion || document.hidden) return;
+      if (timer || document.hidden) return;
       timer = window.setInterval(next, INTERVAL);
     };
     var stop = function () { if (timer) { window.clearInterval(timer); timer = null; } };
     var restart = function () { stop(); start(); };
 
+    // Pause only while the pointer is on the dot controls (not the whole hero,
+    // which fills the viewport), and while a control has keyboard focus.
+    dots.addEventListener("mouseenter", stop);
+    dots.addEventListener("mouseleave", start);
     if (hero) {
-      hero.addEventListener("mouseenter", stop);
-      hero.addEventListener("mouseleave", start);
       hero.addEventListener("focusin", stop);
       hero.addEventListener("focusout", start);
     }

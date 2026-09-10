@@ -2,7 +2,7 @@
    AIRDAB - "Humanistic Authority" visual system
    Adapted from the approved Front End reference: editorial, high-contrast,
    asymmetric 12-col grid, tonal layering + 1px borders, generous whitespace.
-   The reference's dark navy is re-cast in AIRDAB's cream / white / forest / lime.
+   The reference's dark navy is re-cast in AIRDAB's cream / white / forest / green.
    Fonts kept as AIRDAB brand: Fraunces (display) + Inter (body).
 
    1  Tokens
@@ -37,9 +37,9 @@
   --surface:       #ffffff;
   --surface-cream: #f2ecdd;
   --surface-sand:  #e9e1cf;
-  --surface-forest:#0f2f20;   /* deep-band re-cast of reference "lowest" */
-  --forest:        #173d2b;
-  --forest-deep:   #0c2a1c;
+  --surface-forest:#14261a;   /* deep green band - matches airdab.org #1b2d1a family */
+  --forest:        #1b2d1a;   /* airdab.org primary dark green */
+  --forest-deep:   #0f1e0e;
 
   /* Text */
   --on-surface:      #17251c;
@@ -52,11 +52,11 @@
   --outline-soft:   #e0d8c4;
   --outline-forest: rgba(255, 255, 255, 0.16);
 
-  /* Accent - AIRDAB green + lime in place of the reference amber */
-  --primary:      #173d2b;   /* forest: text accents, links, emphasis, dark fills */
-  --accent:       #c4e639;   /* lime: primary CTAs, active states, the CTA band */
-  --accent-deep:  #aacb2f;
-  --on-accent:    #0c2a1c;
+  /* Accent - AIRDAB brand greens, matched to airdab.org */
+  --primary:      #1b2d1a;   /* airdab.org dark green: text accents, links, emphasis, dark fills */
+  --accent:       #57e74e;   /* airdab.org bright green: primary CTAs, active states, the CTA band */
+  --accent-deep:  #38c93e;
+  --on-accent:    #0b2410;
 
   /* Type - sizes from the reference DESIGN.md, families kept as AIRDAB brand */
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
@@ -485,6 +485,31 @@ body { padding-top: 78px; }
 .card--offset { transform: translateY(0); }
 @media (min-width: 1000px) { .cards--offset .card:nth-child(even) { transform: translateY(-32px); } }
 
+/* ---------- 9a. Pillar list (aligned rows, balanced regardless of text length) ---------- */
+.pillars { border-top: 1px solid var(--outline); }
+.pillar {
+  display: grid;
+  grid-template-columns: 64px minmax(180px, 15rem) 1fr;
+  gap: clamp(20px, 4vw, 56px);
+  align-items: start;
+  padding: clamp(24px, 3.4vw, 40px) 0;
+  border-bottom: 1px solid var(--outline);
+}
+.pillar__icon {
+  width: 56px; height: 56px;
+  display: grid; place-items: center;
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--primary);
+}
+.pillar__icon svg { width: 26px; height: 26px; }
+.pillar h3 { font-size: var(--headline-sm); margin: 6px 0 0; }
+.pillar p { color: var(--on-surface-var); font-size: var(--body-md); margin: 4px 0 0; max-width: 60ch; }
+@media (max-width: 760px) {
+  .pillar { grid-template-columns: 56px 1fr; row-gap: 10px; }
+  .pillar p { grid-column: 1 / -1; }
+}
+
 /* ---------- 9b. Timeline (About) ---------- */
 .timeline { position: relative; max-width: 920px; margin-inline: auto; }
 .timeline::before {
@@ -754,7 +779,7 @@ body { padding-top: 78px; }
   overflow: hidden;
   border-radius: var(--r-lg);
   border: 1px solid var(--outline-soft);
-  background: var(--surface-cream);
+  background: var(--surface-sand);
   margin-bottom: 20px;
   transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
@@ -764,8 +789,9 @@ body { padding-top: 78px; }
   box-shadow: 0 22px 46px -30px rgba(12, 42, 28, 0.38);
 }
 .member__photo img {
+  position: absolute; inset: 0;
   width: 100%; height: 100%; object-fit: cover;
-  object-position: center 18%;
+  object-position: center 20%;
   transition: transform var(--dur) var(--ease);
 }
 .member:hover .member__photo img,
@@ -1062,6 +1088,43 @@ body { padding-top: 78px; }
   text-transform: uppercase;
   color: rgba(238, 243, 234, 0.5);
 }
+
+/* ---------- 19b. FAQ ---------- */
+.faq { max-width: 780px; margin: 0 auto; display: grid; gap: 12px; }
+.faq__item {
+  border: 1px solid var(--outline-soft);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}
+.faq__item[open] { border-color: var(--outline); }
+.faq__item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 20px 22px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--body-lg);
+  color: var(--on-surface);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after {
+  content: "";
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-right: 2px solid var(--primary);
+  border-bottom: 2px solid var(--primary);
+  transform: rotate(45deg);
+  transition: transform 0.25s var(--ease);
+}
+.faq__item[open] summary::after { transform: rotate(-135deg); }
+.faq__item summary:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: -2px; border-radius: var(--r-lg); }
+.faq__a { padding: 0 22px 22px; color: var(--on-surface-var); max-width: 68ch; }
+.faq__a p { margin: 0; }
 
 /* ---------- 20. Motion + utilities ---------- */
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
