@@ -33,11 +33,11 @@
   color-scheme: light;
 
   /* Surfaces - light re-cast of the reference's dark tiers */
-  --bg:            #faf7f0;
+  --bg:            #fbfbfb;
   --surface:       #ffffff;
-  --surface-cream: #f2ecdd;
+  --surface-cream: #faf7f0;
   --surface-sand:  #e9e1cf;
-  --surface-forest:#14261a;   /* deep green band - matches airdab.org #1b2d1a family */
+  --surface-forest:#046039;   /* deep green band */
   --forest:        #1b2d1a;   /* airdab.org primary dark green */
   --forest-deep:   #0f1e0e;
 
@@ -969,6 +969,15 @@ body { padding-top: 78px; }
 .hero--abstract__inner { position: relative; z-index: 2; max-width: 640px; margin-inline: auto; padding: var(--mx); }
 .hero--abstract .overline { color: var(--accent); }
 .hero--abstract .display { color: #fff; margin: 18px 0 20px; }
+.hero--abstract .display em {
+  font-style: italic;
+  color: var(--on-accent);
+  background: var(--accent);
+  padding: 0.04em 0.16em;
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
 .hero--abstract p { color: var(--on-forest-var); }
 .hero--abstract__node {
   position: absolute; z-index: 3; display: flex; align-items: center; justify-content: center;
@@ -1191,6 +1200,7 @@ body:not(.js) .reveal { opacity: 1; transform: none; }
 }
 
 @media (max-width: 900px) {
+  .hero--abstract__node { display: none; }
   .hero--band .hero__grid,
   .hero--split .hero__grid,
   .cta-split { grid-template-columns: 1fr; }
