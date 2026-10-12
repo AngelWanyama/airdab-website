@@ -810,6 +810,27 @@ body { padding-top: 78px; }
   color: #fff;
 }
 .feature-quote img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* rotating impact stories: stacked photos crossfade; text fades/slides while it is swapped */
+.feature-quote__photo { opacity: 0; transition: opacity 0.9s var(--ease); }
+.feature-quote__photo.is-active { opacity: 1; }
+.story-swap { transition: opacity 0.35s var(--ease), transform 0.35s var(--ease); }
+.story-swap.is-out { opacity: 0; transform: translateY(10px); }
+/* laptop+ : heading, compact featured photo and all three cards fit one laptop screen (~1366x768) */
+@media (min-width: 1001px) {
+  .impact-stories { padding-block: var(--sec-md); }
+  .impact-stories .sec-head { margin-bottom: 14px; align-items: flex-end; }
+  .impact-stories .sec-note { max-width: 52ch; }
+  .impact-stories .sec-head__title { font-size: var(--headline-md); }
+  .impact-stories [data-story-carousel] { grid-template-columns: 0.6fr 1fr; gap: 16px; }
+  .impact-stories .feature-quote { margin: 0; }
+  .impact-stories .feature-quote__body { padding: 24px 28px; }
+  .impact-stories .feature-quote blockquote { font-size: 1.2rem; }
+  .impact-stories .quote-glyph { font-size: 2.6rem; }
+  .impact-stories .quote-cards { gap: 10px; }
+  .impact-stories .quote-card { padding: 10px 20px; }
+  .impact-stories .quote-card blockquote { margin-bottom: 8px; font-size: 15px; line-height: 1.42; }
+  .impact-stories .quote-card__badge { width: 30px; height: 30px; font-size: var(--label-md); }
+}
 .feature-quote__scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,32,22,0.92), rgba(10,32,22,0.2)); }
 .feature-quote__body { position: relative; padding: clamp(24px, 3vw, 40px); }
 .feature-quote blockquote { margin: 0 0 16px; font-family: var(--font-display); font-size: var(--headline-sm); line-height: 1.35; }

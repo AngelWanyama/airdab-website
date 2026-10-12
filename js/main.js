@@ -408,4 +408,88 @@
     render();
     start();
   });
+
+  /* ---------- Impact stories carousel (Our Impact) ----------
+     Every 5.5s the stories turn clockwise: right-hand top -> middle -> bottom ->
+     featured (left) -> top. Each story keeps its own photo, name and title.
+     Pauses only while keyboard focus is inside it or the tab is hidden. */
+  document.querySelectorAll("[data-story-carousel]").forEach(function (root) {
+    var dataEl = root.querySelector(".story-data");
+    var feature = root.querySelector(".feature-quote");
+    var cards = Array.prototype.slice.call(root.querySelectorAll(".quote-card"));
+    if (!dataEl || !feature || cards.length !== 3) return;
+    var stories;
+    try { stories = JSON.parse(dataEl.textContent); } catch (err) { return; }
+    if (stories.length !== 4) return;
+
+    var photos = {};
+    feature.querySelectorAll(".feature-quote__photo").forEach(function (p) {
+      photos[p.getAttribute("data-story")] = p;
+      p.hidden = false; // HTML hides photos 2-4 so the page is correct without this script
+      var img = p.querySelector("img"); if (img) img.loading = "eager"; // ready before they rotate in
+    });
+    var caption = feature.querySelector(".feature-quote__body");
+    var order = [0, 1, 2, 3]; // [featured, top, middle, bottom]
+    var INTERVAL = 5500, SWAP_MS = 350;
+    var timer = null, focused = false;
+
+    var fillFeature = function (s) {
+      caption.querySelector("blockquote").textContent = s.quote;
+      caption.querySelector("cite").textContent = s.name + ", " + s.title;
+    };
+    var fillCard = function (card, s) {
+      card.querySelector("blockquote").textContent = s.quote;
+      card.querySelector(".quote-card__badge").textContent = s.badge;
+      card.querySelector(".quote-card__by strong").textContent = s.name;
+      card.querySelector(".quote-card__by div span").textContent = s.title;
+    };
+    var render = function () {
+      fillFeature(stories[order[0]]);
+      cards.forEach(function (card, i) { fillCard(card, stories[order[i + 1]]); });
+      Object.keys(photos).forEach(function (id) { photos[id].classList.toggle("is-active", id === stories[order[0]].id); });
+    };
+
+    // lock heights to the tallest story so the page does not jump while texts change
+    var lockHeights = function () {
+      var saved = order.slice();
+      feature.style.minHeight = ""; cards.forEach(function (c) { c.style.minHeight = ""; });
+      var fMax = 0, cMax = 0;
+      stories.forEach(function (s) {
+        fillFeature(s); fMax = Math.max(fMax, feature.offsetHeight);
+        fillCard(cards[0], s); cMax = Math.max(cMax, cards[0].offsetHeight);
+      });
+      order = saved; render();
+      feature.style.minHeight = fMax + "px";
+      cards.forEach(function (c) { c.style.minHeight = cMax + "px"; });
+    };
+
+    var swapping = [caption].concat(cards);
+    swapping.forEach(function (el) { el.classList.add("story-swap"); });
+    var rotate = function () {
+      swapping.forEach(function (el) { el.classList.add("is-out"); });
+      order = [order[3], order[0], order[1], order[2]]; // bottom -> featured, featured -> top, top -> middle, middle -> bottom
+      Object.keys(photos).forEach(function (id) { photos[id].classList.toggle("is-active", id === stories[order[0]].id); });
+      window.setTimeout(function () {
+        render();
+        swapping.forEach(function (el) { el.classList.remove("is-out"); });
+      }, SWAP_MS);
+    };
+
+    var start = function () {
+      if (timer || focused || document.hidden) return;
+      timer = window.setInterval(rotate, INTERVAL);
+    };
+    var stop = function () { if (timer) { window.clearInterval(timer); timer = null; } };
+    root.addEventListener("focusin", function () { focused = true; stop(); });
+    root.addEventListener("focusout", function (e) { if (!root.contains(e.relatedTarget)) { focused = false; start(); } });
+    document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });
+    var resizeT;
+    window.addEventListener("resize", function () { window.clearTimeout(resizeT); resizeT = window.setTimeout(lockHeights, 200); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(lockHeights);
+
+    render();
+    lockHeights();
+    root._storyCarousel = { rotate: rotate, order: function () { return order.slice(); } }; // test hook
+    start();
+  });
 })();

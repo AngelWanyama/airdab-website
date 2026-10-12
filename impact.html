@@ -135,25 +135,39 @@
   </section>
 
   <!-- IMPACT STORIES -->
-  <section class="section">
+  <section class="section impact-stories">
     <div class="container">
       <div class="sec-head reveal">
         <div>
           <span class="overline">Impact stories</span>
           <h2 class="headline-lg sec-head__title">Stories from our work.</h2>
         </div>
+      
       </div>
-      <div class="feature-quote-grid reveal">
+      <!-- Rotating stories: js/main.js [data-story-carousel] moves them clockwise every 5.5s
+           (Story 3 -> featured -> Story 1 -> Story 2 -> Story 3); each story keeps its own photo. -->
+      <div class="feature-quote-grid reveal" data-story-carousel>
         <figure class="feature-quote">
-          <picture>
-            <source type="image/webp" srcset="assets/field-agriculture-800.webp 800w, assets/field-agriculture.webp 1600w" sizes="(max-width: 1000px) 100vw, 55vw">
-            <img src="assets/field-agriculture.jpg" width="1600" height="1067" alt="A farmer inspecting a healthy rice field with AIRDAB support" loading="lazy">
+          <picture class="feature-quote__photo is-active" data-story="eunice">
+              <source type="image/webp" srcset="assets/field-agriculture-800.webp 800w, assets/field-agriculture.webp 1600w" sizes="(max-width: 1000px) 100vw, 55vw">
+              <img src="assets/field-agriculture.jpg" width="1600" height="1067" alt="A farmer inspecting a healthy rice field with AIRDAB support" loading="lazy">
+          </picture>
+          <picture hidden class="feature-quote__photo" data-story="james">
+              <source type="image/webp" srcset="assets/about-commitment-800.webp 800w, assets/about-commitment.webp 1600w" sizes="(max-width: 1000px) 100vw, 55vw">
+              <img src="assets/about-commitment.jpg" width="1600" height="1067" alt="Newly planted trees and bamboo stabilizing a riverbank near Kasese" loading="lazy">
+          </picture>
+          <picture hidden class="feature-quote__photo" data-story="brown">
+              <img src="assets/gallery/photo-23.jpg" srcset="assets/gallery/photo-23-800.jpg 800w, assets/gallery/photo-23.jpg 1600w" sizes="(max-width: 1000px) 100vw, 55vw" width="1600" height="720" alt="Community representatives gather for a discussion during a field engagement." loading="lazy">
+          </picture>
+          <picture hidden class="feature-quote__photo" data-story="patience">
+              <source type="image/webp" srcset="assets/field-nursery-800.webp 800w, assets/field-nursery.webp 1600w" sizes="(max-width: 1000px) 100vw, 55vw">
+              <img src="assets/field-nursery.jpg" width="1600" height="1067" alt="An AIRDAB facilitator advising women beside tree-seedling nursery beds" loading="lazy">
           </picture>
           <span class="feature-quote__scrim"></span>
           <figcaption class="feature-quote__body">
             <span class="quote-glyph" aria-hidden="true" style="color: rgba(87,231,78,0.5)">&ldquo;</span>
-            <blockquote>I am now able to provide for my family while contributing to the wellbeing of my community and protecting our local environment.</blockquote>
-            <cite>Eunice Twimukye, farmer</cite>
+            <blockquote>With AIRDAB's training, my small farm has grown into a sustainable business. I am now able to provide for my family while contributing to the wellbeing of my community and protecting our local environment.</blockquote>
+            <cite>Eunice Twimukye, Farmer</cite>
           </figcaption>
         </figure>
         <div class="quote-cards">
@@ -170,8 +184,8 @@
             <div class="quote-card__by"><span class="quote-card__badge">PA</span><div><strong>Patience Asiimwe</strong><span>Community development and environmental conservation</span></div></div>
           </article>
         </div>
+        <script type="application/json" class="story-data">[{"id":"eunice","badge":"ET","name":"Eunice Twimukye","title":"Farmer","quote":"With AIRDAB's training, my small farm has grown into a sustainable business. I am now able to provide for my family while contributing to the wellbeing of my community and protecting our local environment."},{"id":"james","badge":"JB","name":"James Byaruhanga","title":"Conservation and community action","quote":"Thanks to AIRDAB's conservation project, our local ecosystem is thriving again. Seeing native wildlife return reminds us of the positive impact of protecting biodiversity and working hand-in-hand with our community."},{"id":"brown","badge":"BM","name":"Brown Mbabazi","title":"Skills and confidence for local leadership","quote":"With AIRDAB's guidance, I gained the skills and confidence to lead development initiatives in our village, empowering our community toward sustainable growth and resilience."},{"id":"patience","badge":"PA","name":"Patience Asiimwe","title":"Community development and environmental conservation","quote":"Through AIRDAB's community development initiatives, I have learned the importance of working together to build stronger, more resilient communities. Protecting our environment and supporting local development are essential steps towards creating a sustainable future for everyone."}]</script>
       </div>
-      <p class="mt-note reveal" style="margin-top: 32px; max-width: 60ch">We will continue documenting stories and evidence from the communities we serve.</p>
     </div>
   </section>
 
