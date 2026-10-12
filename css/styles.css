@@ -57,6 +57,7 @@
   --accent:       #57e74e;   /* airdab.org bright green: primary CTAs, active states, the CTA band */
   --accent-deep:  #38c93e;
   --on-accent:    #0b2410;
+  --danger:       #b42318;   /* form validation / error text (AA on white and cream) */
 
   /* Type - sizes from the reference DESIGN.md, families kept as AIRDAB brand */
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
@@ -146,6 +147,9 @@ h1, h2, h3, h4 {
   transition: top var(--dur) var(--ease);
 }
 .skip-link:focus { top: 16px; }
+
+/* in-page anchors (About dropdown, #support-form ...) land below the fixed header */
+[id] { scroll-margin-top: 96px; }
 
 /* ---------- 3. Layout ---------- */
 .container { width: min(var(--container), 100% - var(--mx) * 2); margin-inline: auto; }
@@ -304,6 +308,41 @@ h1, h2, h3, h4 {
 .nav a:hover { color: var(--on-surface); }
 .nav a.is-current { color: var(--primary); font-weight: 700; }
 
+/* About dropdown (disclosure button + submenu) */
+.nav__group { position: relative; }
+.nav__parent {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--label-lg);
+  color: var(--on-surface-var);
+  transition: color var(--dur) var(--ease);
+}
+.nav__parent:hover, .nav__group.is-open .nav__parent { color: var(--on-surface); }
+.nav__parent.is-current { color: var(--primary); font-weight: 700; }
+.nav__chev { width: 14px; height: 14px; transition: transform var(--dur) var(--ease); }
+.nav__group.is-open .nav__chev { transform: rotate(180deg); }
+.nav__sub {
+  position: absolute; z-index: 110;
+  top: calc(100% + 16px); left: -14px;
+  min-width: 220px;
+  padding: 8px;
+  display: none; flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--outline-soft);
+  border-radius: var(--r-lg);
+  box-shadow: 0 24px 48px -28px rgba(15, 47, 32, 0.35);
+}
+.nav__sub::before { content: ""; position: absolute; left: 0; right: 0; top: -18px; height: 18px; } /* hover bridge */
+.nav__group.is-open .nav__sub { display: flex; }
+.nav__sub a { padding: 10px 14px; border-radius: var(--r); white-space: nowrap; }
+.nav__sub a:hover, .nav__sub a:focus-visible { background: var(--surface-cream); color: var(--on-surface); }
+@media (hover: hover) and (min-width: 1081px) {
+  .nav__group:hover .nav__sub { display: flex; }
+  .nav__group:hover .nav__chev { transform: rotate(180deg); }
+}
+
 .header__cta { display: flex; align-items: center; gap: 18px; }
 .nav-cta {
   padding: 11px 22px;
@@ -342,11 +381,12 @@ body { padding-top: 78px; }
 }
 .hero--photo .hero__bg { position: absolute; inset: 0; }
 .hero--photo .hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 42%; }
-/* content sits in the LEFT column; the photo subject reads on the center-right */
+/* hero wording is centered over the photo */
 
 /* ---------- hero slideshow (progressive enhancement) ---------- */
 .hero__slides { position: absolute; inset: 0; }
 .hero__slide { position: absolute; inset: 0; }
+.hero__slide picture { height: 100%; } /* lets the photo cover tall (mobile) heroes */
 .hero__slide img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 45%; }
 /* with JS: crossfade between slides */
 .hero__slides.is-live .hero__slide { opacity: 0; transition: opacity 1100ms ease; will-change: opacity; }
@@ -374,9 +414,10 @@ body { padding-top: 78px; }
 }
 .hero--photo .hero__scrim {
   position: absolute; inset: 0;
+  /* same tint as before, balanced left-to-right so centered text stays legible */
   background:
-    linear-gradient(to right, rgba(10,32,22,0.92) 0%, rgba(10,32,22,0.72) 34%, rgba(10,32,22,0.30) 64%, rgba(10,32,22,0.12) 100%),
-    linear-gradient(to top, rgba(10,32,22,0.5) 0%, rgba(10,32,22,0) 55%);
+    radial-gradient(ellipse 70% 75% at 50% 72%, rgba(10,32,22,0.62) 0%, rgba(10,32,22,0.34) 60%, rgba(10,32,22,0.12) 100%),
+    linear-gradient(to top, rgba(10,32,22,0.72) 0%, rgba(10,32,22,0.22) 60%, rgba(10,32,22,0.12) 100%);
 }
 .hero__inner {
   position: relative;
@@ -385,10 +426,12 @@ body { padding-top: 78px; }
   padding-inline: var(--mx);
 }
 .hero--photo .hero__inner { padding-bottom: clamp(64px, 10vw, 132px); }
-.hero--photo .hero__inner > * { max-width: 640px; }
+.hero--photo .hero__inner { text-align: center; }
+.hero--photo .hero__inner > * { max-width: 640px; margin-inline: auto; }
 .hero__inner .display { max-width: 15ch; margin-block: 22px 32px; }
 .hero--photo .hero__inner .lede { max-width: 46ch; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.hero--photo .hero__actions { justify-content: center; }
 
 .hero--band { background: var(--surface-cream); }
 .hero--band .hero__grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: clamp(32px, 6vw, 72px); align-items: end; }
@@ -804,11 +847,25 @@ body { padding-top: 78px; }
 .member p { font-size: var(--body-sm); color: var(--on-surface-var); }
 @media (min-width: 1000px) { .team-grid--offset .member:nth-child(even) { margin-top: 48px; } }
 
+/* organisation structure chart (About > Management) */
+.org-structure { margin-top: var(--sec-md); }
+.org-chart {
+  margin: 24px 0 0;
+  padding: clamp(12px, 3vw, 32px);
+  background: var(--surface);
+  border: 1px solid var(--outline-soft);
+  border-radius: var(--r-xl);
+}
+.org-chart img { width: 100%; max-width: 1100px; height: auto; margin-inline: auto; }
+.org-chart figcaption { margin-top: 16px; display: flex; justify-content: center; }
+
 /* ---------- 15. Logo wall ---------- */
-.logo-wall { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gutter); }
+.logo-wall { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gutter); }
 .logo-cell {
   display: flex;
   flex-direction: column;
+  margin: 0 40px;
+  flex: 0 1 calc((100% - 2 * var(--gutter)) / 3 - 80px);
 }
 .logo-cell__frame {
   flex: 1;
@@ -928,6 +985,12 @@ body { padding-top: 78px; }
   font-size: var(--body-sm);
   font-weight: 500;
 }
+.form__note--error { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 7%, var(--surface)); color: var(--danger); }
+.form__note--error a { text-decoration: underline; }
+.field__error { margin-top: 6px; font-size: var(--body-sm); font-weight: 500; color: var(--danger); }
+.field input[aria-invalid="true"], .field textarea[aria-invalid="true"] { border-bottom-color: var(--danger); }
+.form__hp { position: absolute !important; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.form-card button[type="submit"][disabled] { opacity: 0.7; cursor: progress; }
 .section--forest .form-card .field label { color: var(--on-forest-var); }
 .section--forest .form-card .field input,
 .section--forest .form-card .field textarea,
@@ -997,7 +1060,7 @@ body { padding-top: 78px; }
 
 /* ---------- 18d. Office / node card (Contact) ---------- */
 .office-card { position: relative; border-radius: var(--r-xl); overflow: hidden; border: 1px solid var(--outline-soft); }
-.office-card__media { position: relative; aspect-ratio: 16 / 10; }
+.office-card__media { position: relative; aspect-ratio: 16 / 10; max-width: 100%; } /* height:100% + aspect-ratio otherwise widens it past the column on phones */
 .office-card__media img { width: 100%; height: 100%; object-fit: cover; }
 .office-card__overlay {
   position: absolute; inset: 0; background: rgba(15, 47, 32, 0.55);
@@ -1023,6 +1086,7 @@ body { padding-top: 78px; }
   transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
 }
 .press-row:hover { border-color: var(--primary); background: var(--surface-cream); }
+.press-row--email { text-transform: none; letter-spacing: 0.01em; }
 .faq-highlight { border-left: 2px solid var(--accent-deep); padding-left: 20px; }
 
 /* ---------- 18e. Donation panel (Support Us) ---------- */
@@ -1175,6 +1239,20 @@ body:not(.js) .reveal { opacity: 1; transform: none; }
   .nav .su-link { display: block; }
   .nav a { font-family: var(--font-display); font-size: var(--headline-sm); color: var(--on-forest); padding: 14px 0; }
   .nav a.is-current { color: var(--accent); }
+  /* .header's backdrop-filter makes it the containing block for this fixed drawer,
+     so size it to the screen explicitly instead of relying on inset bottom: 0 */
+  .nav { justify-content: flex-start; overflow-y: auto; height: calc(100vh - 78px); height: calc(100dvh - 78px); }
+  .nav > :first-child { margin-top: auto; }
+  .nav > :last-child { margin-bottom: auto; }
+  .nav__group { width: 100%; }
+  .nav__parent { font-family: var(--font-display); font-size: var(--headline-sm); color: var(--on-forest); padding: 14px 0; gap: 10px; }
+  .nav__parent:hover, .nav__group.is-open .nav__parent { color: var(--on-forest); }
+  .nav__parent.is-current { color: var(--accent); font-weight: 500; }
+  .nav__chev { width: 20px; height: 20px; }
+  .nav__sub { position: static; min-width: 0; padding: 0 0 8px 18px; background: none; border: 0; border-left: 1px solid var(--outline-forest); border-radius: 0; box-shadow: none; }
+  .nav__sub::before { display: none; }
+  .nav .nav__sub a { font-family: var(--font-body); font-size: var(--body-lg); color: var(--on-forest-var); padding: 9px 0; border-radius: 0; }
+  .nav .nav__sub a:hover, .nav .nav__sub a:focus-visible { background: none; color: var(--on-forest); }
   body.nav-open .nav { transform: none; visibility: visible; transition: transform 0.4s var(--ease); }
   body.nav-open { overflow: hidden; }
   body.nav-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -1232,7 +1310,7 @@ body:not(.js) .reveal { opacity: 1; transform: none; }
 @media (max-width: 620px) {
   .cards { grid-template-columns: 1fr !important; }
   .team-grid { grid-template-columns: 1fr !important; }
-  .logo-wall { grid-template-columns: 1fr; }
+  .logo-cell { flex-basis: calc(100% - 80px); }
   .opt-select { grid-template-columns: 1fr; }
   .impact-cell--half { grid-column: span 12; }
   .info-row { grid-template-columns: 1fr; gap: 6px; }
