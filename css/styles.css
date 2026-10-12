@@ -429,6 +429,9 @@ body { padding-top: 78px; }
 .hero--photo .hero__inner { text-align: center; }
 .hero--photo .hero__inner > * { max-width: 640px; margin-inline: auto; }
 .hero__inner .display { max-width: 15ch; margin-block: 22px 32px; }
+/* homepage tagline ("Empower. Conserve. Thrive.") on one line: the italic tagline is ~11.5x its
+   font-size wide, so size it to the heading box (desktop) or the viewport minus gutters (mobile) */
+.hero--photo .hero__inner .display em { white-space: nowrap; font-size: min(0.8em, calc((100vw - 4 * var(--mx)) / 12)); }
 .hero--photo .hero__inner .lede { max-width: 46ch; }
 .hero__actions { display: flex; flex-wrap: wrap; gap: 14px; }
 .hero--photo .hero__actions { justify-content: center; }
