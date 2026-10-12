@@ -408,46 +408,4 @@
     render();
     start();
   });
-
-  /* ---------- Give directly (Support Us donate panel) ---------- */
-  var donateToggle = document.getElementById("donate-toggle");
-  var donateAmounts = document.getElementById("donate-amounts");
-  var donateOther = document.getElementById("donate-other");
-  var donateContinue = document.getElementById("donate-continue");
-  if (donateToggle && donateAmounts && donateContinue) {
-    var state = { freq: "Monthly", amount: "25" };
-
-    donateToggle.querySelectorAll("button").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        donateToggle.querySelectorAll("button").forEach(function (b) { b.classList.remove("is-active"); });
-        btn.classList.add("is-active");
-        state.freq = btn.getAttribute("data-freq");
-      });
-    });
-
-    donateAmounts.querySelectorAll(".donate-amount[data-amount]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        donateAmounts.querySelectorAll(".donate-amount").forEach(function (b) { b.classList.remove("is-selected"); });
-        btn.classList.add("is-selected");
-        state.amount = btn.getAttribute("data-amount");
-        if (donateOther) donateOther.value = "";
-      });
-    });
-
-    if (donateOther) {
-      donateOther.addEventListener("input", function () {
-        if (donateOther.value) {
-          donateAmounts.querySelectorAll(".donate-amount[data-amount]").forEach(function (b) { b.classList.remove("is-selected"); });
-          state.amount = donateOther.value;
-        }
-      });
-    }
-
-    donateContinue.addEventListener("click", function (e) {
-      e.preventDefault();
-      var subject = "Support interest via AIRDAB website (" + state.freq + " $" + state.amount + ")";
-      var body = "I would like to give $" + state.amount + " (" + state.freq + ").\n\nPlease let me know the next step.";
-      window.location.href = "mailto:airdabuganda@gmail.com?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-    });
-  }
 })();
