@@ -5,7 +5,8 @@
    - count-up numbers (Our Impact / Home)
    - hero slideshow (crossfade, autoplay, dots; respects reduced motion)
    - support-type option selector (Support Us)
-   - contact / support forms -> pre-filled mailto
+   - About dropdown (disclosure, Esc, click-outside)
+   - contact / support forms -> validated, spam-guarded send via FormSubmit
    - dynamic copyright year
 */
 (function () {
@@ -22,7 +23,8 @@
   if (toggle && nav) {
     var lastFocused = null;
     var focusables = function () {
-      return Array.prototype.slice.call(nav.querySelectorAll("a[href], button:not([disabled])"));
+      return Array.prototype.slice.call(nav.querySelectorAll("a[href], button:not([disabled])"))
+        .filter(function (el) { return el.offsetParent !== null; }); // skip collapsed submenu links
     };
     var openNav = function () {
       lastFocused = document.activeElement;
@@ -59,6 +61,28 @@
     });
   }
 
+  /* ---------- About dropdown (disclosure) ---------- */
+  document.querySelectorAll(".nav__group").forEach(function (group) {
+    var btn = group.querySelector(".nav__parent");
+    if (!btn) return;
+    var setOpen = function (open) {
+      group.classList.toggle("is-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+    btn.addEventListener("click", function () { setOpen(!group.classList.contains("is-open")); });
+    group.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && group.classList.contains("is-open")) {
+        e.stopPropagation(); // close the submenu first, not the whole mobile drawer
+        setOpen(false);
+        btn.focus();
+      }
+    });
+    document.addEventListener("click", function (e) { if (!group.contains(e.target)) setOpen(false); });
+    group.addEventListener("focusout", function (e) {
+      if (e.relatedTarget && !group.contains(e.relatedTarget) && window.matchMedia("(min-width: 1081px)").matches) setOpen(false);
+    });
+  });
+
   /* ---------- Active nav link ---------- */
   var current = location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".nav a, .footer a").forEach(function (a) {
@@ -67,6 +91,9 @@
       a.setAttribute("aria-current", "page");
     }
   });
+  if (current === "about.html") {
+    document.querySelectorAll(".nav__parent").forEach(function (b) { b.classList.add("is-current"); });
+  }
 
   /* ---------- Scroll reveal ---------- */
   var reveals = document.querySelectorAll(".reveal");
@@ -135,35 +162,176 @@
     sel.addEventListener("change", sync); sync();
   });
 
-  /* ---------- Forms -> mailto ---------- */
+  /* ---------- Contact / support forms -> email via FormSubmit ----------
+     The site is static, so messages are relayed by FormSubmit (formsubmit.co),
+     which emails them to the organisational inbox below with the visitor's
+     address as Reply-To. No secret is involved: the endpoint is public by
+     design. Once the inbox owner activates the form, FormSubmit issues a
+     random alias that can replace the address in FORM_ENDPOINT. */
   var EMAIL = "airdabuganda@gmail.com";
+  var FORM_ENDPOINT = "https://formsubmit.co/ajax/" + EMAIL;
+  var MIN_FILL_MS = 3000;          // faster than this is almost certainly a bot
+  var MAX_SENDS = 3, SEND_WINDOW_MS = 10 * 60 * 1000; // per browser
+  var pageLoadedAt = Date.now();
+
   function labelFor(form, name) {
     var field = form.querySelector('[name="' + name + '"]');
+    if (field && field.getAttribute("data-label")) return field.getAttribute("data-label");
     var lab = field && field.id ? form.querySelector('label[for="' + field.id + '"]') : null;
-    return lab ? lab.textContent.trim().replace(/\s*\*?$/, "") : name;
+    return lab ? lab.textContent.trim().replace(/\s*\(optional\)\s*$/i, "").replace(/\s*\*?$/, "") : name;
   }
-  function buildMailto(form) {
-    var data = new FormData(form);
-    var subject = form.getAttribute("data-subject") ||
-      (document.querySelector(".hero__inner .display, .hero .display") || {}).textContent || "Website enquiry";
-    var lines = [];
-    data.forEach(function (value, key) {
-      var v = String(value).trim();
-      if (v) lines.push(labelFor(form, key) + ": " + v);
+  function recentSends() {
+    try {
+      var now = Date.now();
+      return (JSON.parse(localStorage.getItem("airdab-form-sends") || "[]") || [])
+        .filter(function (t) { return typeof t === "number" && now - t < SEND_WINDOW_MS; });
+    } catch (err) { return []; }
+  }
+  function recordSend() {
+    try {
+      var list = recentSends(); list.push(Date.now());
+      localStorage.setItem("airdab-form-sends", JSON.stringify(list));
+    } catch (err) { /* storage unavailable: rely on the server-side limits */ }
+  }
+  var EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[A-Za-z]{2,}$/;
+  var RULES = {
+    "full-name": function (v) { return v.length < 2 ? "Please enter your full name." : v.length > 100 ? "Please shorten your name to 100 characters." : ""; },
+    "email": function (v) { return !v ? "Please enter your email address." : !EMAIL_RE.test(v) || v.length > 254 ? "Please enter a valid email address, for example name@example.com." : ""; },
+    "phone": function (v) { return v && !/^[+\d][\d\s()-]{5,24}$/.test(v) ? "Please enter a valid phone number, or leave it blank." : ""; },
+    "message": function (v) { return v.length < 10 ? "Please write a message of at least 10 characters." : v.length > 5000 ? "Please keep your message under 5,000 characters." : ""; }
+  };
+
+  function fieldError(field, msg) {
+    var id = field.id + "-error";
+    var el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement("p");
+      el.id = id;
+      el.className = "field__error";
+      field.parentNode.appendChild(el);
+      var described = (field.getAttribute("aria-describedby") || "").split(" ").filter(Boolean);
+      if (described.indexOf(id) < 0) described.push(id);
+      field.setAttribute("aria-describedby", described.join(" "));
+    }
+    el.textContent = msg;
+    el.hidden = !msg;
+    if (msg) field.setAttribute("aria-invalid", "true"); else field.removeAttribute("aria-invalid");
+  }
+  function validate(form) {
+    var firstBad = null;
+    Object.keys(RULES).forEach(function (name) {
+      var field = form.querySelector('[name="' + name + '"]');
+      if (!field) return;
+      var msg = RULES[name](field.value.trim());
+      fieldError(field, msg);
+      if (msg && !firstBad) firstBad = field;
     });
-    return "mailto:" + EMAIL + "?subject=" + encodeURIComponent(subject.trim()) +
-      "&body=" + encodeURIComponent(lines.join("\n"));
+    return firstBad;
   }
-  document.querySelectorAll("form[data-mailto]").forEach(function (form) {
+  function showNote(form, kind, text, withEmailLink) {
+    var note = form.querySelector(".form__note");
+    if (!note) return;
+    note.hidden = false;
+    note.classList.toggle("form__note--error", kind === "error");
+    note.setAttribute("role", kind === "error" ? "alert" : "status");
+    note.textContent = text;
+    if (withEmailLink) {
+      note.appendChild(document.createTextNode(" "));
+      var a = document.createElement("a");
+      a.href = "mailto:" + EMAIL;
+      a.textContent = EMAIL;
+      note.appendChild(a);
+      note.appendChild(document.createTextNode("."));
+    }
+  }
+
+  document.querySelectorAll("form[data-form]").forEach(function (form) {
+    var button = form.querySelector('button[type="submit"]');
+    var buttonHTML = button ? button.innerHTML : "";
+    var sending = false;
+
+    // re-check a field once the visitor has been told it is wrong
+    form.addEventListener("input", function (e) {
+      var f = e.target;
+      if (f.getAttribute && f.getAttribute("aria-invalid") === "true" && RULES[f.name]) fieldError(f, RULES[f.name](f.value.trim()));
+    });
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      if (!form.checkValidity()) { form.reportValidity(); return; }
-      var note = form.querySelector(".form__note");
-      if (note) {
-        note.hidden = false;
-        note.textContent = "Opening your email app with the message ready. Please press send to reach AIRDAB.";
+      if (sending) return; // ignore double clicks / repeated Enter
+
+      var firstBad = validate(form);
+      if (firstBad) {
+        showNote(form, "error", "Please check the highlighted fields and try again.");
+        firstBad.focus();
+        return;
       }
-      window.location.href = buildMailto(form);
+      var honey = form.querySelector('[name="_honey"]');
+      if (honey && honey.value) { // bot filled the hidden field: pretend success, send nothing
+        form.reset();
+        showNote(form, "ok", "Thank you. Your message has been sent to AIRDAB.");
+        return;
+      }
+      if (Date.now() - pageLoadedAt < MIN_FILL_MS) {
+        showNote(form, "error", "That was very quick. Please wait a moment and press send again.");
+        return;
+      }
+      if (recentSends().length >= MAX_SENDS) {
+        showNote(form, "error", "You have sent several messages in the last few minutes. Please try again later, or email us at", true);
+        return;
+      }
+
+      var payload = {
+        _subject: form.getAttribute("data-subject") || "Website enquiry via AIRDAB",
+        _template: "table",
+        _captcha: "false"
+      };
+      new FormData(form).forEach(function (value, key) {
+        var v = String(value).trim();
+        if (!v || key === "_honey") return;
+        if (key === "email") { payload.email = v; payload._replyto = v; return; }
+        payload[labelFor(form, key)] = v;
+      });
+
+      sending = true;
+      form.setAttribute("aria-busy", "true");
+      if (button) { button.disabled = true; button.textContent = "Sending..."; }
+      showNote(form, "ok", "Sending your message...");
+
+      var controller = "AbortController" in window ? new AbortController() : null;
+      var timeout = window.setTimeout(function () { if (controller) controller.abort(); }, 15000);
+
+      // URL-encoded body = a CORS "simple" request (no preflight round trip)
+      var body = new URLSearchParams();
+      Object.keys(payload).forEach(function (k) { body.append(k, payload[k]); });
+      fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json" },
+        body: body,
+        signal: controller ? controller.signal : undefined
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (data) {
+            var ok = res.ok && (data.success === true || data.success === "true");
+            if (!ok) throw new Error((data && data.message) || ("HTTP " + res.status));
+          });
+        })
+        .then(function () {
+          recordSend();
+          form.reset();
+          form.querySelectorAll(".field__error").forEach(function (el) { el.hidden = true; el.textContent = ""; });
+          showNote(form, "ok", "Thank you. Your message has been sent to AIRDAB and our team will reply to the email address you provided.");
+        })
+        .catch(function (err) {
+          if (window.console) console.warn("AIRDAB form submission failed:", err && err.message);
+          showNote(form, "error", "Sorry, your message could not be sent just now. Please try again in a few minutes, or email us directly at", true);
+        })
+        .then(function () {
+          window.clearTimeout(timeout);
+          sending = false;
+          form.removeAttribute("aria-busy");
+          if (button) { button.disabled = false; button.innerHTML = buttonHTML; }
+        });
     });
   });
 
