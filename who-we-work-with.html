@@ -24,7 +24,15 @@
     </a>
     <nav class="nav" id="nav" aria-label="Primary">
       <a href="index.html">Home</a>
-      <a href="about.html">About</a>
+      <div class="nav__group">
+        <button class="nav__parent" type="button" aria-expanded="false" aria-controls="nav-about">About
+          <svg class="nav__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="nav__sub" id="nav-about">
+          <a href="about.html#who-we-are">Who We Are</a>
+          <a href="about.html#board">Board of Directors</a>
+          <a href="about.html#management">Management</a>
+        </div>
+      </div>
       <a href="services.html">Services</a>
       <a href="impact.html">Our Impact</a>
       <a href="who-we-work-with.html">Who We Work With</a>
@@ -121,6 +129,30 @@
           </span>
           <figcaption class="logo-cell__name">Government of Uganda</figcaption>
         </figure>
+        <figure class="logo-cell" tabindex="0">
+          <span class="logo-cell__frame">
+            <img src="assets/partners/bishop-stuart-university.png" width="445" height="447" alt="Bishop Stuart University logo" loading="lazy">
+          </span>
+          <figcaption class="logo-cell__name">Bishop Stuart University</figcaption>
+        </figure>
+        <figure class="logo-cell" tabindex="0">
+          <span class="logo-cell__frame">
+            <img src="assets/partners/kickstart-foundation-uganda.png" width="254" height="199" alt="Kickstart Foundation Uganda logo" loading="lazy">
+          </span>
+          <figcaption class="logo-cell__name">Kickstart Foundation Uganda</figcaption>
+        </figure>
+        <figure class="logo-cell" tabindex="0">
+          <span class="logo-cell__frame">
+            <img src="assets/partners/amor-sickle-cell-voice.png" width="225" height="225" alt="Amor Sickle-Cell Voice logo" loading="lazy">
+          </span>
+          <figcaption class="logo-cell__name">Amor Sickle-Cell Voice</figcaption>
+        </figure>
+        <figure class="logo-cell" tabindex="0">
+          <span class="logo-cell__frame">
+            <img src="assets/partners/ozzy-africa-technologies.png" width="640" height="319" alt="Ozzy Africa Technologies logo" loading="lazy">
+          </span>
+          <figcaption class="logo-cell__name">Ozzy Africa Technologies</figcaption>
+        </figure>
       </div>
       <p class="mt-note reveal"><a class="btn btn--dark" href="contact.html">Talk to us
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
@@ -137,15 +169,15 @@
       <div class="cards reveal" style="--cols: 3">
         <article class="quote-card">
           <blockquote>With AIRDAB's training, my small farm has grown into a sustainable business.</blockquote>
-          <div class="quote-card__by"><span class="quote-card__badge">ET</span><div><strong>Eunice T</strong><span>Farmer</span></div></div>
+          <div class="quote-card__by"><span class="quote-card__badge">ET</span><div><strong>Eunice Twimukye</strong><span>Farmer</span></div></div>
         </article>
         <article class="quote-card">
           <blockquote>Thanks to AIRDAB's conservation project, our local ecosystem is thriving again. Seeing native wildlife return reminds us of the positive impact of protecting biodiversity and working hand-in-hand with our community.</blockquote>
-          <div class="quote-card__by"><span class="quote-card__badge">JB</span><div><strong>James B</strong><span>Community conservation</span></div></div>
+          <div class="quote-card__by"><span class="quote-card__badge">JB</span><div><strong>James Byaruhanga</strong><span>Community conservation</span></div></div>
         </article>
         <article class="quote-card">
           <blockquote>With AIRDAB's guidance, I gained the skills and confidence to lead development initiatives in our village, empowering our community toward sustainable growth and resilience.</blockquote>
-          <div class="quote-card__by"><span class="quote-card__badge">BM</span><div><strong>Brown M</strong><span>Local leadership</span></div></div>
+          <div class="quote-card__by"><span class="quote-card__badge">BM</span><div><strong>Brown Mbabazi</strong><span>Local leadership</span></div></div>
         </article>
       </div>
     </div>
@@ -200,7 +232,7 @@
           <a href="tel:+256776068819" aria-label="Call AIRDAB"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1.2.4 2.4.7 3.5a2 2 0 0 1-.5 2.1L8.1 10.5a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c1.1.4 2.3.6 3.5.7a2 2 0 0 1 1.7 2Z"/></svg></a>
         </div>
         <address>
-          Kilembe Road, Kasese, Uganda<br>
+          Kasese Mbarara Road, Kasese, Uganda<br>
           P.O. Box 430628, Kasese<br>
           Monday to Friday, 8am to 5pm<br>
           <a href="tel:+256776068819">+256 776 068819</a><br>

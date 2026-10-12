@@ -24,7 +24,15 @@
     </a>
     <nav class="nav" id="nav" aria-label="Primary">
       <a href="index.html">Home</a>
-      <a href="about.html">About</a>
+      <div class="nav__group">
+        <button class="nav__parent" type="button" aria-expanded="false" aria-controls="nav-about">About
+          <svg class="nav__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="nav__sub" id="nav-about">
+          <a href="about.html#who-we-are">Who We Are</a>
+          <a href="about.html#board">Board of Directors</a>
+          <a href="about.html#management">Management</a>
+        </div>
+      </div>
       <a href="services.html">Services</a>
       <a href="impact.html">Our Impact</a>
       <a href="who-we-work-with.html">Who We Work With</a>
@@ -75,14 +83,14 @@
                 <img src="assets/contact-meeting.jpg" width="1600" height="1067" alt="A forested crater lake in the Kasese landscape" loading="lazy">
               </picture>
               <div class="office-card__overlay">
-                <a class="btn btn--primary" href="https://www.google.com/maps/search/?api=1&query=Kilembe+Road+Kasese+Uganda" target="_blank" rel="noopener">Get directions</a>
+                <a class="btn btn--primary" href="https://www.google.com/maps/search/?api=1&query=Kasese+Mbarara+Road+Kasese+Uganda" target="_blank" rel="noopener">Get directions</a>
               </div>
             </div>
           </div>
         </div>
         <div class="col-6">
           <dl class="info-rows" style="border-top: 1px solid var(--outline-soft)">
-            <div class="info-row"><dt>Office</dt><dd>Kilembe Road, Kasese, Uganda<br>P.O. Box 430628, Kasese</dd><span></span></div>
+            <div class="info-row"><dt>Office</dt><dd>Kasese Mbarara Road, Kasese, Uganda<br>P.O. Box 430628, Kasese</dd><span></span></div>
             <div class="info-row"><dt>Office hours</dt><dd>Monday to Friday, 8am to 5pm</dd><span></span></div>
             <div class="info-row"><dt>Phone</dt><dd><a href="tel:+256776068819">+256 776 068819</a><br><a href="tel:+256778617884">+256 778 617884</a></dd><span></span></div>
             <div class="info-row"><dt>Email</dt><dd><a href="mailto:airdabuganda@gmail.com">airdabuganda@gmail.com</a></dd><span></span></div>
@@ -97,27 +105,31 @@
     <div class="container">
       <div class="grid12 reveal" style="align-items: start">
         <div class="col-7">
-          <form class="form-card" data-mailto data-subject="Website enquiry via AIRDAB" novalidate>
+          <form class="form-card" data-form data-subject="Website enquiry via AIRDAB" novalidate>
             <span class="overline">Send a message</span>
             <h2 class="headline-md" style="margin: 14px 0 8px">What would you like to talk to us about?</h2>
             <p class="muted" style="margin-bottom: 24px">Fill in the form and we will get back to you.</p>
             <div class="form-grid">
               <div class="field">
-                <input id="full-name" name="full-name" type="text" autocomplete="name" placeholder=" " required>
+                <input id="full-name" name="full-name" type="text" autocomplete="name" placeholder=" " maxlength="100" required>
                 <label for="full-name">Full name</label>
               </div>
               <div class="field">
-                <input id="email" name="email" type="email" autocomplete="email" placeholder=" " required>
+                <input id="email" name="email" type="email" autocomplete="email" placeholder=" " maxlength="254" required>
                 <label for="email">Email</label>
               </div>
               <div class="field field--full">
-                <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder=" ">
+                <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder=" " maxlength="25">
                 <label for="phone">Phone</label>
               </div>
               <div class="field field--full">
-                <textarea id="message" name="message" placeholder=" " required></textarea>
+                <textarea id="message" name="message" placeholder=" " maxlength="5000" required></textarea>
                 <label for="message">Message</label>
               </div>
+            </div>
+            <div class="form__hp" aria-hidden="true">
+              <label for="hp-website">Leave this field empty</label>
+              <input id="hp-website" name="_honey" type="text" tabindex="-1" autocomplete="off">
             </div>
             <div class="form__row">
               <button class="btn btn--primary" type="submit">Send message
@@ -132,7 +144,7 @@
             <h3 style="font-size: var(--headline-sm); margin-bottom: 10px">Prefer to reach us directly?</h3>
             <p class="muted" style="margin-bottom: 20px">Email or call and our team will follow up about collaboration, program delivery, research, services or support.</p>
             <div class="stack" style="gap: 10px">
-              <a class="press-row" href="mailto:airdabuganda@gmail.com">
+              <a class="press-row press-row--email" href="mailto:airdabuganda@gmail.com">
                 <span>airdabuganda@gmail.com</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </a>
@@ -144,7 +156,7 @@
           </div>
           <div class="faq-highlight">
             <h4 style="font-size: var(--headline-sm); margin-bottom: 8px">Visiting the office?</h4>
-            <p class="muted" style="margin-bottom: 14px">We're open Monday to Friday, 8am to 5pm, at Kilembe Road, Kasese. Call ahead so the right team member is available to meet you.</p>
+            <p class="muted" style="margin-bottom: 14px">We're open Monday to Friday, 8am to 5pm, at Kasese Mbarara Road, Kasese. Call ahead so the right team member is available to meet you.</p>
             <a class="textlink" href="tel:+256776068819">Call the office
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           </div>
@@ -202,7 +214,7 @@
           <a href="tel:+256776068819" aria-label="Call AIRDAB"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1.2.4 2.4.7 3.5a2 2 0 0 1-.5 2.1L8.1 10.5a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c1.1.4 2.3.6 3.5.7a2 2 0 0 1 1.7 2Z"/></svg></a>
         </div>
         <address>
-          Kilembe Road, Kasese, Uganda<br>
+          Kasese Mbarara Road, Kasese, Uganda<br>
           P.O. Box 430628, Kasese<br>
           Monday to Friday, 8am to 5pm<br>
           <a href="tel:+256776068819">+256 776 068819</a><br>
