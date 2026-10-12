@@ -861,6 +861,23 @@ body { padding-top: 78px; }
 }
 .board-placeholder p { font-size: var(--body-lg); color: var(--on-surface-var); }
 
+/* photo gallery (gallery.html): 3 / 2 / 1 columns, caption under each photo */
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 2.5vw, 32px) var(--gutter); }
+.gallery__item { margin: 0; display: flex; flex-direction: column; }
+.gallery__link {
+  display: block;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border: 1px solid var(--outline-soft);
+  border-radius: var(--r-lg);
+  background: var(--surface-sand);
+}
+.gallery__link img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur) var(--ease); }
+.gallery__link:hover img, .gallery__link:focus-visible img { transform: scale(1.04); }
+.gallery__item figcaption { margin-top: 12px; font-size: var(--body-sm); line-height: 1.55; color: var(--on-surface-var); }
+@media (max-width: 1000px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .gallery { grid-template-columns: 1fr; } }
+
 /* organisation structure chart (Management page) */
 .org-structure { margin-top: var(--sec-md); }
 .org-chart {

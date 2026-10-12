@@ -25,7 +25,7 @@ selector, floating-label selects, the About dropdown, the contact/support form
 sender (see Forms), and the copyright year.
 
 Header and footer markup is repeated verbatim on every page - change one, change all
-nine. The About dropdown links to `about.html`, `board.html` and `management.html`. Keep the nav link list identical across pages.
+ten. The About dropdown links to `about.html`, `board.html` and `management.html`. Keep the nav link list identical across pages.
 
 ## Pages
 | File | Notes |
@@ -34,6 +34,7 @@ nine. The About dropdown links to `about.html`, `board.html` and `management.htm
 | `about.html` | Who We Are: story, journey, vision/mission, values, commitment |
 | `board.html` | Board of Directors (placeholder until member profiles are confirmed) |
 | `management.html` | Management team and Organisation structure chart |
+| `gallery.html` | Photo gallery: 27 photos with the supplied captions (3/2/1 columns) |
 | `our-work.html` | 8 programs as alternating split rows, at-a-glance band, 6 services, CTA |
 | `impact.html` | Impact numbers dashboard (animated), what we track, 2035 statement, stories |
 | `who-we-work-with.html` | Stakeholder grid, partner logo wall, voices of impact, partner-with-us |
@@ -51,7 +52,9 @@ folder. No ImpactSphere reference copy is used anywhere.
 
 Source files stay in `assets/`. Optimised derivatives (`slug.webp` 1600w,
 `slug-800.webp`, `slug.jpg` fallback; logos `name.webp`) are wired with `<picture>`
-+ `srcset`. Team portraits are in `assets/team/` (600px JPGs resized from `assets/Team Photos/`;
++ `srcset`. Gallery photos are in `assets/gallery/` (`photo-NN.jpg` 1600w + `photo-NN-800.jpg`), resized from the
+local-only `assets/Airdab_website_photos/`; captions come verbatim from its `photo_captions.csv`.
+Team portraits are in `assets/team/` (600px JPGs resized from `assets/Team Photos/`;
 Osbert uses `team-osbert.jpg` because the newer PNGs have a checkerboard baked in).
 Partner logos added in 2026 are in `assets/partners/`. The org chart is
 `assets/org-structure.jpg` (from `Airdab Organisation structure.png`, linked at full size);
