@@ -91,7 +91,7 @@
       a.setAttribute("aria-current", "page");
     }
   });
-  if (current === "about.html") {
+  if (["about.html", "board.html", "management.html"].indexOf(current) > -1) {
     document.querySelectorAll(".nav__parent").forEach(function (b) { b.classList.add("is-current"); });
   }
 

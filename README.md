@@ -25,17 +25,19 @@ selector, floating-label selects, the About dropdown, the contact/support form
 sender (see Forms), and the copyright year.
 
 Header and footer markup is repeated verbatim on every page - change one, change all
-seven. Keep the nav link list identical across pages.
+nine. The About dropdown links to `about.html`, `board.html` and `management.html`. Keep the nav link list identical across pages.
 
 ## Pages
 | File | Notes |
 |---|---|
 | `index.html` | Hero, who-we-are value grid, stat band, field bento, testimonial, CTA |
-| `about.html` | Who we are (story, journey, vision/mission, values, commitment), Board of Directors, Management team, Organisation structure chart. Linked from the About dropdown (`#who-we-are`, `#board`, `#management`). |
+| `about.html` | Who We Are: story, journey, vision/mission, values, commitment |
+| `board.html` | Board of Directors (placeholder until member profiles are confirmed) |
+| `management.html` | Management team and Organisation structure chart |
 | `our-work.html` | 8 programs as alternating split rows, at-a-glance band, 6 services, CTA |
 | `impact.html` | Impact numbers dashboard (animated), what we track, 2035 statement, stories |
 | `who-we-work-with.html` | Stakeholder grid, partner logo wall, voices of impact, partner-with-us |
-| `support-us.html` | Ways to support, interest form with option selector |
+| `support-us.html` | Financial support note (no payments on site), ways to support, interest form, contact details |
 | `contact.html` | Office details, message form, connect |
 
 ## Content and assets

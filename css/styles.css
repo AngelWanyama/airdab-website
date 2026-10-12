@@ -847,7 +847,18 @@ body { padding-top: 78px; }
 .member p { font-size: var(--body-sm); color: var(--on-surface-var); }
 @media (min-width: 1000px) { .team-grid--offset .member:nth-child(even) { margin-top: 48px; } }
 
-/* organisation structure chart (About > Management) */
+/* Board of Directors: placeholder until member profiles are confirmed */
+.board-placeholder {
+  max-width: 46rem;
+  display: grid; gap: 18px; justify-items: start;
+  padding: clamp(24px, 3vw, 40px);
+  background: var(--surface);
+  border: 1px dashed var(--outline);
+  border-radius: var(--r-xl);
+}
+.board-placeholder p { font-size: var(--body-lg); color: var(--on-surface-var); }
+
+/* organisation structure chart (Management page) */
 .org-structure { margin-top: var(--sec-md); }
 .org-chart {
   margin: 24px 0 0;
