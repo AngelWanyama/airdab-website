@@ -410,7 +410,7 @@
   });
 
   /* ---------- Impact stories carousel (Our Impact) ----------
-     Every 5.5s the stories turn clockwise: right-hand top -> middle -> bottom ->
+     Every 10s the stories turn clockwise: right-hand top -> middle -> bottom ->
      featured (left) -> top. Each story keeps its own photo, name and title.
      Pauses only while keyboard focus is inside it or the tab is hidden. */
   document.querySelectorAll("[data-story-carousel]").forEach(function (root) {
@@ -430,7 +430,7 @@
     });
     var caption = feature.querySelector(".feature-quote__body");
     var order = [0, 1, 2, 3]; // [featured, top, middle, bottom]
-    var INTERVAL = 5500, SWAP_MS = 350;
+    var INTERVAL = 10000, SWAP_MS = 350; // 10s: enough time to read a full story
     var timer = null, focused = false;
 
     var fillFeature = function (s) {
