@@ -35,7 +35,7 @@ ten. The About dropdown links to `about.html`, `board.html` and `management.html
 | `board.html` | Board of Directors (placeholder until member profiles are confirmed) |
 | `management.html` | Management team and Organisation structure chart |
 | `gallery.html` | Photo gallery: 27 photos with the supplied captions (3/2/1 columns) |
-| `our-work.html` | 8 programs as alternating split rows, at-a-glance band, 6 services, CTA |
+| `our-work.html` | Four core pillars (Youth Empowerment, Women's Growth, Green Tomorrow, Rural Progress) as tabs, each with its projects and captioned photos. Homepage "Learn more" links open it via `?pillar=<id>`. Draft wording for approval; `<!-- REVIEW -->` comments mark details needing confirmation. |
 | `impact.html` | Impact numbers dashboard (animated), what we track, 2035 statement, stories |
 | `who-we-work-with.html` | Stakeholder grid, partner logo wall, voices of impact, partner-with-us |
 | `support-us.html` | Financial support note (no payments on site), ways to support, interest form, contact details |
