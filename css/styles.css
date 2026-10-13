@@ -536,7 +536,7 @@ body { padding-top: 78px; }
 .pillars-head h2 { color: var(--accent); font-size: var(--headline-lg); margin: 0; line-height: 1.1; }
 .pillars-head p { margin: 12px 0 0; font-size: var(--body-md); letter-spacing: 0.02em; color: #b1832f; }
 
-.pillar-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 2.4vw, 28px); }
+.pillar-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 2.4vw, 28px); }
 .pcard {
   display: flex; flex-direction: column;
   background: var(--surface);
@@ -560,7 +560,8 @@ body { padding-top: 78px; }
 .pcard p { color: var(--on-surface-var); font-size: var(--body-sm); line-height: 1.6; margin: 0; }
 .pcard { display: flex; flex-direction: column; }
 .pcard__body { flex: 1; display: flex; flex-direction: column; }
-.pcard__more { margin-top: auto; padding-top: 16px; align-self: flex-start; }
+.pcard__more { margin-top: auto; align-self: flex-start; }
+.pcard__body > p { margin-bottom: 20px; }
 
 /* ---------- Our Work: pillar tabs + project photo grids ---------- */
 .pillar-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(28px, 4vw, 48px); scroll-margin-top: 96px; }
@@ -587,7 +588,7 @@ body { padding-top: 78px; }
   .pillar-tabs { display: grid; grid-template-columns: 1fr 1fr; }
   .pillar-tab { justify-content: center; padding: 12px 10px; text-align: center; }
 }
-@media (max-width: 1100px) { .pillar-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .pillar-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .pillar-cards { grid-template-columns: 1fr; } }
 
 /* ---------- 9b. Timeline (About) ---------- */
@@ -1090,6 +1091,9 @@ body { padding-top: 78px; }
 .cta-band p { max-width: 56ch; margin: 0 auto 34px; color: rgba(12, 42, 28, 0.78); font-size: var(--body-lg); }
 .cta-band__actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 .cta-band .btn--dark { background: var(--forest-deep); color: #fff; border-color: var(--forest-deep); }
+/* "Get in touch" bands: soft sage instead of the bright accent green */
+.cta-band--sage { background: #c9d6bf; }
+.cta-band--sage .btn--outline { color: var(--forest-deep); border-color: rgba(15, 30, 14, 0.35); } /* white text is unreadable on sage */
 .cta-band .btn--dark:hover { background: #fff; color: var(--forest-deep); border-color: #fff; }
 
 .cta-split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 6vw, 72px); align-items: center; }
