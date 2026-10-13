@@ -492,4 +492,60 @@
     root._storyCarousel = { rotate: rotate, order: function () { return order.slice(); } }; // test hook
     start();
   });
+
+  /* ---------- Our Work: pillar tabs ----------
+     our-work.html?pillar=youth-empowerment (or #youth-empowerment) opens with that pillar selected.
+     Click or arrow keys switch pillars and update ?pillar=. Without JS all four panels show in order.
+     ?pillar= is used rather than #id so the browser does not run its own (smooth) jump to the panel. */
+  document.querySelectorAll("[data-pillar-tabs]").forEach(function (root) {
+    var tabs = Array.prototype.slice.call(root.querySelectorAll(".pillar-tab"));
+    var list = root.querySelector(".pillar-tabs");
+    if (!tabs.length) return;
+    var panelFor = function (tab) { return document.getElementById(tab.getAttribute("aria-controls")); };
+    var select = function (tab, moveFocus) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.classList.toggle("is-active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.setAttribute("tabindex", on ? "0" : "-1");
+        panelFor(t).hidden = !on;
+      });
+      if (moveFocus) tab.focus();
+    };
+    var fromHash = function () {
+      var m = /[?&]pillar=([^&#]+)/.exec(location.search);
+      var id = m ? decodeURIComponent(m[1]) : decodeURIComponent(location.hash.slice(1));
+      for (var i = 0; i < tabs.length; i++) if (tabs[i].getAttribute("aria-controls") === id) return tabs[i];
+      return null;
+    };
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function (e) {
+        e.preventDefault();
+        select(tab, false);
+        if (history.replaceState) history.replaceState(null, "", "?pillar=" + tab.getAttribute("aria-controls"));
+      });
+    });
+    list.addEventListener("keydown", function (e) {
+      var i = tabs.indexOf(document.activeElement); if (i < 0) return;
+      var next = e.key === "ArrowRight" || e.key === "ArrowDown" ? i + 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : null;
+      if (next === null) return;
+      e.preventDefault();
+      var t = tabs[(next + tabs.length) % tabs.length];
+      select(t, true);
+      if (history.replaceState) history.replaceState(null, "", "?pillar=" + t.getAttribute("aria-controls"));
+    });
+    window.addEventListener("hashchange", function () { var t = fromHash(); if (t) { select(t, false); list.scrollIntoView({ block: "start" }); } });
+
+    var initial = fromHash();
+    select(initial || tabs[0], false);
+    if (initial) { // arrived from a "Learn more" button: show the tabs + chosen pillar at the top
+      root.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
+      // instant (not the site's smooth scroll), and again after load so images settling or the
+      // browser's own #hash jump cannot leave the tabs under the fixed header
+      var toTabs = function () { list.scrollIntoView({ block: "start", behavior: "instant" }); };
+      window.requestAnimationFrame(toTabs);
+      if (document.readyState === "complete") window.setTimeout(toTabs, 50);
+      else window.addEventListener("load", function () { window.setTimeout(toTabs, 50); });
+    }
+  });
 })();

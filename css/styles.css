@@ -536,7 +536,7 @@ body { padding-top: 78px; }
 .pillars-head h2 { color: var(--accent); font-size: var(--headline-lg); margin: 0; line-height: 1.1; }
 .pillars-head p { margin: 12px 0 0; font-size: var(--body-md); letter-spacing: 0.02em; color: #b1832f; }
 
-.pillar-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 2.4vw, 28px); }
+.pillar-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 2.4vw, 28px); }
 .pcard {
   display: flex; flex-direction: column;
   background: var(--surface);
@@ -553,11 +553,41 @@ body { padding-top: 78px; }
 }
 .pcard__media { aspect-ratio: 16 / 10; overflow: hidden; background: var(--surface-sand); }
 .pcard__media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur) var(--ease); }
+.pcard__media picture { display: block; height: 100%; } /* photo fills the card's media box */
 .pcard:hover .pcard__media img { transform: scale(1.04); }
 .pcard__body { padding: 20px 22px 24px; }
 .pcard h3 { font-size: var(--headline-sm); margin: 0 0 8px; }
 .pcard p { color: var(--on-surface-var); font-size: var(--body-sm); line-height: 1.6; margin: 0; }
-@media (max-width: 900px) { .pillar-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.pcard { display: flex; flex-direction: column; }
+.pcard__body { flex: 1; display: flex; flex-direction: column; }
+.pcard__more { margin-top: auto; padding-top: 16px; align-self: flex-start; }
+
+/* ---------- Our Work: pillar tabs + project photo grids ---------- */
+.pillar-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: clamp(28px, 4vw, 48px); scroll-margin-top: 96px; }
+.pillar-tab {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 20px;
+  border: 1px solid var(--outline); border-radius: var(--r-pill);
+  background: var(--surface); color: var(--on-surface);
+  font-weight: 600; font-size: var(--body-sm);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.pillar-tab:hover { border-color: var(--forest); }
+.pillar-tab.is-active { background: var(--forest); border-color: var(--forest); color: #fff; }
+.pillar-tab__n { font-family: var(--font-display); color: var(--primary); }
+.pillar-tab.is-active .pillar-tab__n { color: var(--accent); }
+.pillar-panel + .pillar-panel { margin-top: var(--sec-md); } /* no-JS: all panels stacked */
+.pillar-head h2 { margin: 12px 0 14px; }
+.pillar-intro { max-width: 72ch; padding-left: 20px; border-left: 2px solid var(--accent); font-size: var(--body-lg); line-height: 1.65; color: var(--on-surface-var); }
+.pillar-panel:focus { outline: none; }
+.pillar-project { margin-top: clamp(28px, 4vw, 44px); }
+.pillar-project h3 { font-size: var(--headline-sm); margin-bottom: 8px; }
+.pillar-project > p { max-width: 72ch; margin-bottom: 20px; color: var(--on-surface-var); }
+@media (max-width: 620px) {
+  .pillar-tabs { display: grid; grid-template-columns: 1fr 1fr; }
+  .pillar-tab { justify-content: center; padding: 12px 10px; text-align: center; }
+}
+@media (max-width: 1100px) { .pillar-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .pillar-cards { grid-template-columns: 1fr; } }
 
 /* ---------- 9b. Timeline (About) ---------- */
@@ -894,6 +924,7 @@ body { padding-top: 78px; }
   background: var(--surface-sand);
 }
 .gallery__link img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur) var(--ease); }
+.gallery__link picture { display: block; height: 100%; }
 .gallery__link:hover img, .gallery__link:focus-visible img { transform: scale(1.04); }
 .gallery__item figcaption { margin-top: 12px; font-size: var(--body-sm); line-height: 1.55; color: var(--on-surface-var); }
 .gallery__title { display: block; margin-bottom: 4px; font-size: var(--body-md); font-weight: 600; line-height: 1.35; color: var(--on-surface); }
