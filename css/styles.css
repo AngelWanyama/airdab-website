@@ -1091,8 +1091,8 @@ body { padding-top: 78px; }
 .cta-band p { max-width: 56ch; margin: 0 auto 34px; color: rgba(12, 42, 28, 0.78); font-size: var(--body-lg); }
 .cta-band__actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 .cta-band .btn--dark { background: var(--forest-deep); color: #fff; border-color: var(--forest-deep); }
-/* "Get in touch" bands: soft sage instead of the bright accent green */
-.cta-band--sage { background: #c9d6bf; }
+/* "Work with AIRDAB" (home) and "Get in touch" bands: soft sage #C9DED5 instead of the bright accent green */
+.cta-band--sage { background: #C9DED5; }
 .cta-band--sage .btn--outline { color: var(--forest-deep); border-color: rgba(15, 30, 14, 0.35); } /* white text is unreadable on sage */
 .cta-band .btn--dark:hover { background: #fff; color: var(--forest-deep); border-color: #fff; }
 
@@ -1156,6 +1156,9 @@ body { padding-top: 78px; }
   opacity: 0; transition: opacity 0.25s var(--ease);
 }
 .office-card:hover .office-card__overlay, .office-card:focus-within .office-card__overlay { opacity: 1; }
+/* Contact: embedded map instead of a photo; "Get directions" always visible in the corner (no overlay over the map) */
+.office-card--map .office-card__media iframe { display: block; width: 100%; height: 100%; min-height: 300px; border: 0; }
+.office-card--map .office-card__overlay { inset: auto 16px 16px auto; background: none; opacity: 1; }
 .office-card__body { padding: clamp(20px, 3vw, 32px); }
 
 .press-card {
