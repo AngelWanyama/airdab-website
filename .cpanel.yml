@@ -1,6 +1,6 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/airdab/mysite.airdab.org/
+    - export DEPLOYPATH=/home/airdab/public_html/
     - /bin/cp -R * $DEPLOYPATH
 
