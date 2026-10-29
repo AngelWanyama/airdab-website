@@ -3,4 +3,5 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/airdab/public_html/
     - /bin/cp -R * $DEPLOYPATH
+    - /bin/cp .htaccess $DEPLOYPATH
 
