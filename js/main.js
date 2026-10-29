@@ -6,7 +6,9 @@
    - hero slideshow (crossfade, autoplay, dots; respects reduced motion)
    - support-type option selector (Support Us)
    - About dropdown (disclosure, Esc, click-outside)
-   - contact / support forms -> validated, spam-guarded send via FormSubmit
+   - contact / support forms -> validated, spam-guarded send via FormSubmit (consent required)
+   - Google Maps embed loads only after "Show map" (Contact)
+   - pause / play for the hero slideshow and stories carousel; no autoplay with reduced motion
    - dynamic copyright year
 */
 (function () {
@@ -198,8 +200,11 @@
     "full-name": function (v) { return v.length < 2 ? "Please enter your full name." : v.length > 100 ? "Please shorten your name to 100 characters." : ""; },
     "email": function (v) { return !v ? "Please enter your email address." : !EMAIL_RE.test(v) || v.length > 254 ? "Please enter a valid email address, for example name@example.com." : ""; },
     "phone": function (v) { return v && !/^[+\d][\d\s()-]{5,24}$/.test(v) ? "Please enter a valid phone number, or leave it blank." : ""; },
-    "message": function (v) { return v.length < 10 ? "Please write a message of at least 10 characters." : v.length > 5000 ? "Please keep your message under 5,000 characters." : ""; }
+    "message": function (v) { return v.length < 10 ? "Please write a message of at least 10 characters." : v.length > 5000 ? "Please keep your message under 5,000 characters." : ""; },
+    "consent": function (v) { return v ? "" : "Please tick the box to agree to how we use your details, so that we can reply."; }
   };
+  // checkboxes count as filled only when ticked (their value is always "on" / the value attribute)
+  function valueOf(field) { return field.type === "checkbox" ? (field.checked ? "yes" : "") : field.value.trim(); }
 
   function fieldError(field, msg) {
     var id = field.id + "-error";
@@ -222,7 +227,7 @@
     Object.keys(RULES).forEach(function (name) {
       var field = form.querySelector('[name="' + name + '"]');
       if (!field) return;
-      var msg = RULES[name](field.value.trim());
+      var msg = RULES[name](valueOf(field));
       fieldError(field, msg);
       if (msg && !firstBad) firstBad = field;
     });
@@ -253,7 +258,11 @@
     // re-check a field once the visitor has been told it is wrong
     form.addEventListener("input", function (e) {
       var f = e.target;
-      if (f.getAttribute && f.getAttribute("aria-invalid") === "true" && RULES[f.name]) fieldError(f, RULES[f.name](f.value.trim()));
+      if (f.getAttribute && f.getAttribute("aria-invalid") === "true" && RULES[f.name]) fieldError(f, RULES[f.name](valueOf(f)));
+    });
+    form.addEventListener("change", function (e) { // checkboxes: older browsers fire only "change"
+      var f = e.target;
+      if (f.type === "checkbox" && f.getAttribute("aria-invalid") === "true" && RULES[f.name]) fieldError(f, RULES[f.name](valueOf(f)));
     });
 
     form.addEventListener("submit", function (e) {
@@ -335,6 +344,42 @@
     });
   });
 
+  /* ---------- Google Maps: load only after the visitor asks ----------
+     The embed sends the visitor's IP address to Google and can set Google cookies,
+     so nothing is requested from Google until the "Show map" button is pressed. */
+  document.querySelectorAll("[data-map-consent]").forEach(function (box) {
+    var btn = box.querySelector("button");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var frame = document.createElement("iframe");
+      frame.src = box.getAttribute("data-map-src");
+      frame.title = box.getAttribute("data-map-title") || "Map";
+      frame.referrerPolicy = "strict-origin-when-cross-origin";
+      frame.setAttribute("allowfullscreen", "");
+      box.parentNode.replaceChild(frame, box);
+      frame.focus();
+    });
+  });
+
+  /* pause / play button shared by the hero slideshow and the stories carousel (WCAG 2.2.2) */
+  var PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+  var PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5.5v13a1 1 0 0 0 1.5.86l11-6.5a1 1 0 0 0 0-1.72l-11-6.5A1 1 0 0 0 7 5.5Z"/></svg>';
+  function pauseButton(className, what, withText, onToggle) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = className;
+    var paused = false;
+    var render = function () {
+      var label = (paused ? "Play " : "Pause ") + what;
+      b.innerHTML = (paused ? PLAY_ICON : PAUSE_ICON) + (withText ? "<span>" + label + "</span>" : "");
+      if (withText) b.removeAttribute("aria-label"); else b.setAttribute("aria-label", label);
+    };
+    b.addEventListener("click", function () { paused = !paused; render(); onToggle(paused); });
+    b.setPaused = function (p) { paused = p; render(); };
+    render();
+    return b;
+  }
+
   /* ---------- Year ---------- */
   document.querySelectorAll("[data-year]").forEach(function (el) {
     el.textContent = new Date().getFullYear();
@@ -360,16 +405,20 @@
     };
     warm(1);
 
+    // autoplay is off for visitors who ask for reduced motion; anyone can pause it (WCAG 2.2.2)
+    var paused = reduceMotion;
     var dots = document.createElement("div");
     dots.className = "hero__dots";
-    dots.setAttribute("role", "tablist");
-    dots.setAttribute("aria-label", "Choose hero image");
+    dots.setAttribute("role", "group");
+    dots.setAttribute("aria-label", "Slideshow controls");
+    var pauseBtn = pauseButton("hero__pause", "slideshow", false, function (p) { paused = p; p ? stop() : start(); });
+    pauseBtn.setPaused(paused);
+    dots.appendChild(pauseBtn);
     var buttons = slides.map(function (slide, i) {
       var b = document.createElement("button");
       b.type = "button";
-      b.setAttribute("role", "tab");
-      var label = (slide.querySelector("img") || {}).alt || "Image " + (i + 1);
-      b.setAttribute("aria-label", label);
+      var alt = (slide.querySelector("img") || {}).alt;
+      b.setAttribute("aria-label", "Show image " + (i + 1) + " of " + slides.length + (alt ? ": " + alt : ""));
       b.addEventListener("click", function () { go(i); restart(); });
       dots.appendChild(b);
       return b;
@@ -380,14 +429,14 @@
       slides.forEach(function (s, i) { s.classList.toggle("is-active", i === index); });
       buttons.forEach(function (b, i) {
         b.classList.toggle("is-active", i === index);
-        b.setAttribute("aria-selected", i === index ? "true" : "false");
+        if (i === index) b.setAttribute("aria-current", "true"); else b.removeAttribute("aria-current");
       });
     };
     var go = function (i) { index = (i + slides.length) % slides.length; warm(index + 1); render(); };
     var next = function () { go(index + 1); };
 
     var start = function () {
-      if (timer || document.hidden) return;
+      if (timer || paused || document.hidden) return;
       timer = window.setInterval(next, INTERVAL);
     };
     var stop = function () { if (timer) { window.clearInterval(timer); timer = null; } };
@@ -475,11 +524,15 @@
       }, SWAP_MS);
     };
 
+    var paused = reduceMotion; // see hero slideshow
     var start = function () {
-      if (timer || focused || document.hidden) return;
+      if (timer || paused || focused || document.hidden) return;
       timer = window.setInterval(rotate, INTERVAL);
     };
     var stop = function () { if (timer) { window.clearInterval(timer); timer = null; } };
+    var pauseBtn = pauseButton("story-pause", "stories", true, function (p) { paused = p; p ? stop() : start(); });
+    pauseBtn.setPaused(paused);
+    root.parentNode.insertBefore(pauseBtn, root.nextSibling);
     root.addEventListener("focusin", function () { focused = true; stop(); });
     root.addEventListener("focusout", function (e) { if (!root.contains(e.relatedTarget)) { focused = false; start(); } });
     document.addEventListener("visibilitychange", function () { document.hidden ? stop() : start(); });

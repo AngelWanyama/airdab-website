@@ -25,7 +25,7 @@ selector, floating-label selects, the About dropdown, the contact/support form
 sender (see Forms), and the copyright year.
 
 Header and footer markup is repeated verbatim on every page - change one, change all
-ten. The About dropdown links to `about.html`, `board.html` and `management.html`. Keep the nav link list identical across pages.
+fourteen. The About dropdown links to `about.html`, `board.html` and `management.html`. Keep the nav link list identical across pages.
 
 ## Pages
 | File | Notes |
@@ -39,7 +39,32 @@ ten. The About dropdown links to `about.html`, `board.html` and `management.html
 | `impact.html` | Impact numbers dashboard (animated), what we track, 2035 statement, stories |
 | `who-we-work-with.html` | Stakeholder grid, partner logo wall, voices of impact, partner-with-us |
 | `support-us.html` | Financial support note (no payments on site), ways to support, interest form, contact details |
-| `contact.html` | Office details, message form, connect |
+| `contact.html` | Office details, click-to-load map, message form, connect |
+| `privacy.html` | Privacy Policy (Uganda Data Protection and Privacy Act, 2019). `<!-- REVIEW -->` comments mark facts AIRDAB must confirm |
+| `terms.html` | Terms and Conditions |
+| `cookies.html` | Cookie Policy: lists everything the site stores in the browser; keep it in sync with `js/main.js` |
+
+The footer bottom bar on every page links to the three legal pages.
+
+## Privacy by design
+
+- **No third-party requests on page load.** Fonts are self-hosted in `fonts/` (Fraunces and Inter, SIL Open Font
+  License, licences alongside). Do not add Google Fonts, analytics, social embeds or other trackers without
+  updating `cookies.html` and adding a consent banner.
+- **Google Maps (Contact)** is a placeholder until the visitor presses "Show map" (`[data-map-consent]` in `js/main.js`).
+- **Only strictly necessary storage:** the `airdab-form-sends` local-storage item (form rate limit). No cookies.
+  That is why the site needs no cookie banner.
+- **Forms** send only what the visitor types plus a required consent checkbox (`name="consent"`); the consent
+  text and value carry the Privacy Policy date. If the policy changes, update both forms.
+- **`.htaccess`** redirects HTTP to HTTPS and sets basic security headers. Merge it with any existing
+  `.htaccess` on the server rather than overwriting.
+
+## Accessibility
+
+Target: WCAG 2.2 AA. Text colours are checked for 4.5:1 contrast (3:1 for large text and form field outlines).
+The hero slideshow and the Our Impact stories carousel have pause buttons and do not autoplay when the visitor
+prefers reduced motion. Links that open a new tab say so to screen readers (`.sr-only` text or `aria-label`).
+The faint decorative numbers on Services (`.split-row__ghost`, `aria-hidden`) are exempt as pure decoration.
 
 ## Content and assets
 

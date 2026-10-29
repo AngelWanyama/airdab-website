@@ -1,0 +1,18 @@
+# AIRDAB website - server rules (LiteSpeed / Apache)
+# If public_html already has an .htaccess (cPanel adds one for some features),
+# merge these lines into it rather than replacing it.
+
+# Send every visitor to the encrypted (HTTPS) site, so form messages and
+# browsing are never sent in plain text.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Basic security headers
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
