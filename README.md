@@ -40,7 +40,7 @@ fourteen. The About dropdown links to `about.html`, `board.html` and `management
 | `who-we-work-with.html` | Stakeholder grid, partner logo wall, voices of impact, partner-with-us |
 | `support-us.html` | Financial support note (no payments on site), ways to support, interest form, contact details |
 | `contact.html` | Office details, click-to-load map, message form, connect |
-| `privacy.html` | Privacy Policy (Uganda Data Protection and Privacy Act, 2019). `<!-- REVIEW -->` comments mark facts AIRDAB must confirm |
+| `privacy.html` | Privacy Policy (Uganda Data Protection and Privacy Act, 2019) |
 | `terms.html` | Terms and Conditions |
 | `cookies.html` | Cookie Policy: lists everything the site stores in the browser; keep it in sync with `js/main.js` |
 
